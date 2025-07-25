@@ -51,27 +51,53 @@
 .clo-full {
   grid-column: 1 / -1;
 }
+
+/* Estilos para el selector de idioma */
+.language-switcher {
+  text-align: right;
+  margin-bottom: 10px;
+}
+.language-switcher button {
+  background-color: #666;
+  padding: 5px 10px;
+  margin: 0;
+  border-radius: 3px;
+}
+.language-switcher button:hover {
+  background-color: #444;
+}
 </style>
 
 <div class="clo-container">
-  <h2>Generador de Ropa de SC compatible con las ultimas versiones API 1.8.1, solo rellena los campos y baja el archivo o copialo a tu mod.</h2><div><a href="https://www.mediafire.com/file/c1t0gax73qaycn5/%255B1.8%255DROPA_DE_PRUEBA_MOD.scmod/file" target="_blank">CLIC PARA OBTENER EL MOD DEL VIDEO</a></div><div><br /></div>
+  <div class="language-switcher">
+    <button id="langToggleBtn" onclick="toggleLanguage()"></button>
+  </div>
+
+  <h2 data-lang-es="Generador de Ropa de SC compatible con las ultimas versiones API 1.8.1, solo rellena los campos y baja el archivo o copialo a tu mod."
+      data-lang-en="SC Clothing Generator compatible with the latest API versions 1.8.1, just fill in the fields and download the file or copy it to your mod."></h2>
+  <div>
+    <a href="https://www.mediafire.com/file/c1t0gax73qaycn5/%255B1.8%255DROPA_DE_PRUEBA_MOD.scmod/file" target="_blank"
+       data-lang-es="CLIC PARA OBTENER EL MOD DEL VIDEO"
+       data-lang-en="CLICK TO GET THE VIDEO'S MOD"></a>
+  </div>
+  <div><br /></div>
 
   <div class="clo-group">
     <div class="clo-full">
-      <label>Nombre del Mod (opcional):</label>
-      <input id="modName" placeholder="Ejemplo: MiModDeRopa" type="text" />
+      <label data-lang-es="Nombre del Mod (opcional):" data-lang-en="Mod Name (optional):"></label>
+      <input id="modName" data-placeholder-es="Ejemplo: MiModDeRopa" data-placeholder-en="Example: MyClothingMod" type="text" />
     </div>
 
-    <label>Index:</label>
+    <label data-lang-es="Índice:" data-lang-en="Index:"></label>
     <input id="index" type="number" value="38" />
 
-    <label>DisplayName:</label>
+    <label data-lang-es="Nombre de visualización:" data-lang-en="Display Name:"></label>
     <input id="displayName" type="text" />
 
-    <label>Description:</label>
+    <label data-lang-es="Descripción:" data-lang-en="Description:"></label>
     <input id="description" type="text" />
 
-    <label>Slot:</label>
+    <label data-lang-es="Ranura:" data-lang-en="Slot:"></label>
     <select id="slot">
       <option value="Head">Head</option>
       <option selected="" value="Torso">Torso</option>
@@ -79,64 +105,114 @@
       <option value="Feet">Feet</option>
     </select>
 
-    <label>ArmorProtection:</label>
+    <label data-lang-es="Protección de armadura:" data-lang-en="Armor Protection:"></label>
     <input id="armorProtection" type="number" value="0.6" />
 
-    <label>Sturdiness:</label>
+    <label data-lang-es="Resistencia:" data-lang-en="Sturdiness:"></label>
     <input id="sturdiness" type="number" value="100" />
 
-    <label>Insulation:</label>
+    <label data-lang-es="Aislamiento:" data-lang-en="Insulation:"></label>
     <input id="insulation" type="number" value="8.0" />
 
-    <label>MovementSpeedFactor:</label>
+    <label data-lang-es="Factor de velocidad de movimiento:" data-lang-en="Movement Speed Factor:"></label>
     <input id="movementSpeedFactor" type="number" value="1" />
 
-    <label>SteedMovementSpeedFactor:</label>
+    <label data-lang-es="Factor de velocidad de montura:" data-lang-en="Steed Movement Speed Factor:"></label>
     <input id="steedMovementSpeedFactor" type="number" value="1" />
 
-    <label>DensityModifier:</label>
+    <label data-lang-es="Modificador de densidad:" data-lang-en="Density Modifier:"></label>
     <input id="densityModifier" type="number" value="0.0" />
 
-    <label>IsOuter:</label>
+    <label data-lang-es="¿Es exterior?:" data-lang-en="Is Outer?:"></label>
     <select id="isOuter">
       <option value="True">True</option>
       <option selected="" value="False">False</option>
     </select>
 
-    <label>CanBeDyed:</label>
+    <label data-lang-es="¿Puede teñirse?:" data-lang-en="Can Be Dyed?:"></label>
     <select id="canBeDyed">
       <option selected="" value="True">True</option>
       <option value="False">False</option>
     </select>
 
-    <label>Layer:</label>
+    <label data-lang-es="Capa:" data-lang-en="Layer:"></label>
     <input id="layer" type="number" value="2" />
 
-    <label>PlayerLevelRequired:</label>
+    <label data-lang-es="Nivel de jugador requerido:" data-lang-en="Player Level Required:"></label>
     <input id="playerLevelRequired" type="number" value="0" />
 
-    <label>TextureName:</label>
+    <label data-lang-es="Nombre de textura:" data-lang-en="Texture Name:"></label>
     <input id="textureName" type="text" value="Textures/Clothing/Abrigocuero" />
 
-    <label>ImpactSoundsFolder:</label>
+    <label data-lang-es="Carpeta de sonidos de impacto:" data-lang-en="Impact Sounds Folder:"></label>
     <input id="impactSoundsFolder" type="text" value="Audio/Impacts/Soft" />
 
     <div class="clo-full clo-actions">
-      <button onclick="addNewClothing()" type="button">Agregar nueva prenda</button>
-      <button onclick="copyToClipboard()" type="button">Copiar todo</button>
-      <button onclick="downloadFile()" type="button">Descargar</button>
+      <button onclick="addNewClothing()" type="button"
+              data-lang-es="Agregar nueva prenda" data-lang-en="Add New Clothing Item"></button>
+      <button onclick="copyToClipboard()" type="button"
+              data-lang-es="Copiar todo" data-lang-en="Copy All"></button>
+      <button onclick="downloadFile()" type="button"
+              data-lang-es="Descargar" data-lang-en="Download"></button>
     </div>
   </div>
 
-  <h3>🔹 Última línea generada:</h3>
+  <h3 data-lang-es="🔹 Última línea generada:" data-lang-en="🔹 Last Generated Line:"></h3>
   <textarea id="lastGeneratedLine" readonly="" style="height: 80px; width: 100%;"></textarea>
 
-  <h3>🔵 Estructura completa:</h3>
+  <h3 data-lang-es="🔵 Estructura completa:" data-lang-en="🔵 Complete Structure:"></h3>
   <textarea id="generatedCode" readonly="" style="height: 180px; width: 100%;"></textarea>
 </div>
 
 <script>
 let clothingDataList = [];
+let currentLang = 'es'; // Idioma por defecto
+
+const translations = {
+  'es': {
+    copyAlert: "Código copiado al portapapeles",
+    noCodeAlert: "No hay código generado.",
+    downloadFileName: "ropa_generada.clo",
+    toggleBtnText: "English",
+    modNamePlaceholder: "Ejemplo: MiModDeRopa"
+  },
+  'en': {
+    copyAlert: "Code copied to clipboard",
+    noCodeAlert: "No code generated.",
+    downloadFileName: "generated_clothing.clo",
+    toggleBtnText: "Español",
+    modNamePlaceholder: "Example: MyClothingMod"
+  }
+};
+
+function setLanguage(lang) {
+  currentLang = lang;
+
+  // Actualizar todos los elementos con atributos data-lang-
+  document.querySelectorAll('[data-lang-es], [data-lang-en]').forEach(element => {
+    if (lang === 'es' && element.dataset.langEs) {
+      element.textContent = element.dataset.langEs;
+    } else if (lang === 'en' && element.dataset.langEn) {
+      element.textContent = element.dataset.langEn;
+    }
+  });
+
+  // Actualizar placeholders de inputs
+  document.querySelectorAll('input[data-placeholder-es], input[data-placeholder-en]').forEach(input => {
+    if (lang === 'es' && input.dataset.placeholderEs) {
+      input.placeholder = input.dataset.placeholderEs;
+    } else if (lang === 'en' && input.dataset.placeholderEn) {
+      input.placeholder = input.dataset.placeholderEn;
+    }
+  });
+
+  // Actualizar texto del botón de cambio de idioma
+  document.getElementById('langToggleBtn').textContent = translations[currentLang].toggleBtnText;
+}
+
+function toggleLanguage() {
+  setLanguage(currentLang === 'es' ? 'en' : 'es');
+}
 
 function addNewClothing() {
   const data = {
@@ -188,23 +264,28 @@ function copyToClipboard() {
   const textarea = document.getElementById("generatedCode");
   textarea.select();
   document.execCommand("copy");
-  alert("Código copiado al portapapeles");
+  alert(translations[currentLang].copyAlert);
 }
 
 function downloadFile() {
   const content = document.getElementById("generatedCode").value;
   if (!content.trim()) {
-    alert("No hay código generado.");
+    alert(translations[currentLang].noCodeAlert);
     return;
   }
   const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "ropa_generada.clo";
+  a.download = translations[currentLang].downloadFileName;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+// Inicializar el idioma al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+  setLanguage('es'); // Establecer español como idioma predeterminado al cargar
+});
 </script>
