@@ -1,0 +1,210 @@
+<style>
+/* Mismos estilos que antes */
+.clo-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f4f4f4;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  font-family: 'Segoe UI', sans-serif;
+}
+.clo-container h2, .clo-container h3 {
+  color: #333;
+  margin-top: 20px;
+}
+.clo-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+.clo-group label {
+  font-weight: bold;
+  color: #222;
+}
+.clo-container input,
+.clo-container select,
+.clo-container textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.clo-container button {
+  padding: 10px 15px;
+  margin: 5px 10px 5px 0;
+  background-color: #005a9e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.clo-container button:hover {
+  background-color: #003e70;
+}
+.clo-actions {
+  margin-top: 10px;
+}
+.clo-full {
+  grid-column: 1 / -1;
+}
+</style>
+
+<div class="clo-container">
+  <h2>Generador de Ropa de SC compatible con las ultimas versiones API 1.8.1, solo rellena los campos y baja el archivo o copialo a tu mod.</h2><div><a href="https://www.mediafire.com/file/c1t0gax73qaycn5/%255B1.8%255DROPA_DE_PRUEBA_MOD.scmod/file" target="_blank">CLIC PARA OBTENER EL MOD DEL VIDEO</a></div><div><br /></div>
+
+  <div class="clo-group">
+    <div class="clo-full">
+      <label>Nombre del Mod (opcional):</label>
+      <input id="modName" placeholder="Ejemplo: MiModDeRopa" type="text" />
+    </div>
+
+    <label>Index:</label>
+    <input id="index" type="number" value="38" />
+
+    <label>DisplayName:</label>
+    <input id="displayName" type="text" />
+
+    <label>Description:</label>
+    <input id="description" type="text" />
+
+    <label>Slot:</label>
+    <select id="slot">
+      <option value="Head">Head</option>
+      <option selected="" value="Torso">Torso</option>
+      <option value="Legs">Legs</option>
+      <option value="Feet">Feet</option>
+    </select>
+
+    <label>ArmorProtection:</label>
+    <input id="armorProtection" type="number" value="0.6" />
+
+    <label>Sturdiness:</label>
+    <input id="sturdiness" type="number" value="100" />
+
+    <label>Insulation:</label>
+    <input id="insulation" type="number" value="8.0" />
+
+    <label>MovementSpeedFactor:</label>
+    <input id="movementSpeedFactor" type="number" value="1" />
+
+    <label>SteedMovementSpeedFactor:</label>
+    <input id="steedMovementSpeedFactor" type="number" value="1" />
+
+    <label>DensityModifier:</label>
+    <input id="densityModifier" type="number" value="0.0" />
+
+    <label>IsOuter:</label>
+    <select id="isOuter">
+      <option value="True">True</option>
+      <option selected="" value="False">False</option>
+    </select>
+
+    <label>CanBeDyed:</label>
+    <select id="canBeDyed">
+      <option selected="" value="True">True</option>
+      <option value="False">False</option>
+    </select>
+
+    <label>Layer:</label>
+    <input id="layer" type="number" value="2" />
+
+    <label>PlayerLevelRequired:</label>
+    <input id="playerLevelRequired" type="number" value="0" />
+
+    <label>TextureName:</label>
+    <input id="textureName" type="text" value="Textures/Clothing/Abrigocuero" />
+
+    <label>ImpactSoundsFolder:</label>
+    <input id="impactSoundsFolder" type="text" value="Audio/Impacts/Soft" />
+
+    <div class="clo-full clo-actions">
+      <button onclick="addNewClothing()" type="button">Agregar nueva prenda</button>
+      <button onclick="copyToClipboard()" type="button">Copiar todo</button>
+      <button onclick="downloadFile()" type="button">Descargar</button>
+    </div>
+  </div>
+
+  <h3>🔹 Última línea generada:</h3>
+  <textarea id="lastGeneratedLine" readonly="" style="height: 80px; width: 100%;"></textarea>
+
+  <h3>🔵 Estructura completa:</h3>
+  <textarea id="generatedCode" readonly="" style="height: 180px; width: 100%;"></textarea>
+</div>
+
+<script>
+let clothingDataList = [];
+
+function addNewClothing() {
+  const data = {
+    index: document.getElementById("index").value,
+    displayName: document.getElementById("displayName").value,
+    description: document.getElementById("description").value,
+    slot: document.getElementById("slot").value,
+    armorProtection: document.getElementById("armorProtection").value,
+    sturdiness: document.getElementById("sturdiness").value,
+    insulation: document.getElementById("insulation").value,
+    movementSpeedFactor: document.getElementById("movementSpeedFactor").value,
+    steedMovementSpeedFactor: document.getElementById("steedMovementSpeedFactor").value,
+    densityModifier: document.getElementById("densityModifier").value,
+    isOuter: document.getElementById("isOuter").value,
+    canBeDyed: document.getElementById("canBeDyed").value,
+    layer: document.getElementById("layer").value,
+    playerLevelRequired: document.getElementById("playerLevelRequired").value,
+    textureName: document.getElementById("textureName").value,
+    impactSoundsFolder: document.getElementById("impactSoundsFolder").value
+  };
+
+  const line = `    <ClothingData Index="${data.index}" DisplayName="${data.displayName}" Description="${data.description}" Slot="${data.slot}" ArmorProtection="${data.armorProtection}" Sturdiness="${data.sturdiness}" Insulation="${data.insulation}" MovementSpeedFactor="${data.movementSpeedFactor}" SteedMovementSpeedFactor="${data.steedMovementSpeedFactor}" DensityModifier="${data.densityModifier}" IsOuter="${data.isOuter}" CanBeDyed="${data.canBeDyed}" Layer="${data.layer}" PlayerLevelRequired="${data.playerLevelRequired}" TextureName="${data.textureName}" ImpactSoundsFolder="${data.impactSoundsFolder}" />`;
+
+  clothingDataList.push(line);
+
+  document.getElementById("lastGeneratedLine").value = line;
+  updateGeneratedCode();
+
+  // Opcional: limpiar o actualizar índice para siguiente prenda
+  // Por ejemplo: incrementar índice automáticamente
+  let currentIndex = parseInt(data.index);
+  if (!isNaN(currentIndex)) {
+    document.getElementById("index").value = currentIndex + 1;
+  }
+}
+
+function updateGeneratedCode() {
+  const modName = document.getElementById("modName").value.trim();
+  let content = "";
+  if (modName) {
+    content = `<${modName}>\n  <Clothes>\n${clothingDataList.join("\n")}\n  </Clothes>\n</${modName}>`;
+  } else {
+    content = `<Clothes>\n${clothingDataList.join("\n")}\n</Clothes>`;
+  }
+  document.getElementById("generatedCode").value = content;
+}
+
+function copyToClipboard() {
+  const textarea = document.getElementById("generatedCode");
+  textarea.select();
+  document.execCommand("copy");
+  alert("Código copiado al portapapeles");
+}
+
+function downloadFile() {
+  const content = document.getElementById("generatedCode").value;
+  if (!content.trim()) {
+    alert("No hay código generado.");
+    return;
+  }
+  const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "ropa_generada.clo";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>

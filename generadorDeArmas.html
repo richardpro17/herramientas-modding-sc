@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Datos de Armas</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input:focus, select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        button {
+            padding: 12px 25px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+            margin: 30px 0;
+        }
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .output-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .output-section label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .output-section textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            font-family: monospace;
+            resize: vertical;
+            font-size: 14px;
+        }
+        .info-box {
+            background-color: #e0f7fa;
+            border-left: 5px solid #00bcd4;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+        .info-box p {
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+        }
+        .language-toggle {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .language-toggle button {
+            width: auto;
+            padding: 8px 15px;
+            margin-left: 10px;
+            background-color: #007bff;
+            display: inline-block;
+            width: auto;
+            margin: 0 5px;
+        }
+        .language-toggle button.active {
+            background-color: #0056b3;
+        }
+        .section-title {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .checkbox-group {
+            margin: 15px 0;
+        }
+        .checkbox-group label {
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-toggle">
+            <button id="langEs" class="active" onclick="setLanguage('es')">Español</button>
+            <button id="langEn" onclick="setLanguage('en')">English</button>
+        </div>
+        <h1 data-key="title">Generador de Datos de Armas</h1>
+
+        <div class="info-box">
+            <p data-key="infoLine1">Esta herramienta le ayuda a generar datos CSV para nuevas armas basados en la estructura de su juego.</p>
+            <p data-key="infoLine2">Introduzca los detalles a continuación y la línea CSV generada aparecerá en el cuadro de salida.</p>
+            <p data-key="infoLine3">Para valores no introducidos directamente (como offsets, escalas, etc.), se utilizan valores predeterminados de sus ejemplos. La herramienta se centra en equilibrar la <strong>potencia de ataque cuerpo a cuerpo, la potencia de pala, la probabilidad de golpe cuerpo a cuerpo, la potencia de hacha, la potencia de cantera, la durabilidad y la potencia de proyectil</strong>.</p>
+        </div>
+
+        <div class="input-group">
+            <label for="className" data-key="labelClassName">Nombre de Clase (ej. NewSwordBlock):</label>
+            <input type="text" id="className" value="NewWeaponBlock">
+        </div>
+        
+        <div class="input-group">
+            <label for="defaultDisplayName" data-key="labelDisplayName">Nombre para Mostrar por Defecto (ej. New Sword):</label>
+            <input type="text" id="defaultDisplayName" value="New Weapon">
+        </div>
+        
+        <div class="input-group">
+            <label for="defaultCategory" data-key="labelCategory">Categoría por Defecto (ej. Weapons):</label>
+            <select id="defaultCategory">
+                <option value="Weapons">Weapons</option>
+                <option value="Tools">Tools</option>
+                <option value="Custom">Custom</option>
+            </select>
+        </div>
+        
+        <div class="input-group">
+            <label for="craftingId" data-key="labelCraftingId">ID de Fabricación (ej. newweapon):</label>
+            <input type="text" id="craftingId" value="newweapon">
+        </div>
+        
+        <div class="section-title" data-key="sectionCombat">Propiedades de Combate</div>
+        <div class="stats-grid">
+            <div class="input-group">
+                <label for="defaultMeleePower" data-key="labelMeleePower">Potencia de Ataque Cuerpo a Cuerpo:</label>
+                <input type="number" id="defaultMeleePower" value="5" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="defaultMeleeHitProbability" data-key="labelMeleeHitProbability">Probabilidad de Golpe:</label>
+                <input type="number" id="defaultMeleeHitProbability" value="0.8" step="0.01" min="0" max="1">
+            </div>
+            
+            <div class="input-group">
+                <label for="defaultProjectilePower" data-key="labelProjectilePower">Potencia de Proyectil:</label>
+                <input type="number" id="defaultProjectilePower" value="0" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="durability" data-key="labelDurability">Durabilidad:</label>
+                <input type="number" id="durability" value="60" step="1">
+            </div>
+        </div>
+        
+        <div class="section-title" data-key="sectionTools">Propiedades de Herramientas</div>
+        <div class="stats-grid">
+            <div class="input-group">
+                <label for="shovelPower" data-key="labelShovelPower">Potencia de Pala:</label>
+                <input type="number" id="shovelPower" value="1" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="hackPower" data-key="labelHackPower">Potencia de Hacha:</label>
+                <input type="number" id="hackPower" value="1" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="quarryPower" data-key="labelQuarryPower">Potencia de Cantera:</label>
+                <input type="number" id="quarryPower" value="1" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="toolLevel" data-key="labelToolLevel">Nivel de Herramienta:</label>
+                <input type="number" id="toolLevel" value="3" step="1" min="1" max="10">
+            </div>
+        </div>
+        
+        <div class="section-title" data-key="sectionProjectile">Propiedades de Proyectiles</div>
+        <div class="stats-grid">
+            <div class="input-group">
+                <label for="projectileSpeed" data-key="labelProjectileSpeed">Velocidad del Proyectil:</label>
+                <input type="number" id="projectileSpeed" value="0" step="0.1">
+            </div>
+            
+            <div class="input-group">
+                <label for="projectileDamping" data-key="labelProjectileDamping">Amortiguación:</label>
+                <input type="number" id="projectileDamping" value="0.9" step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label for="projectileTipOffset" data-key="labelProjectileTipOffset">Desplazamiento de Punta:</label>
+                <input type="number" id="projectileTipOffset" value="0.3" step="0.01">
+            </div>
+            
+            <div class="input-group">
+                <label for="projectileStickProbability" data-key="labelProjectileStickProbability">Prob. Adherencia:</label>
+                <input type="number" id="projectileStickProbability" value="0" step="0.01" min="0" max="1">
+            </div>
+        </div>
+        
+        <div class="section-title" data-key="sectionFlags">Banderas</div>
+        <div class="stats-grid">
+            <div class="checkbox-group">
+                <input type="checkbox" id="isAimable" checked>
+                <label for="isAimable" data-key="labelIsAimable">Es Apuntable</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="isStickable" checked>
+                <label for="isStickable" data-key="labelIsStickable">Es Adherible</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="alignToVelocity" checked>
+                <label for="alignToVelocity" data-key="labelAlignToVelocity">Alinear a Velocidad</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="disintegratesOnHit">
+                <label for="disintegratesOnHit" data-key="labelDisintegrates">Se Desintegra al Impacto</label>
+            </div>
+        </div>
+
+        <button onclick="generateWeaponData()" data-key="generateButton">Generar Datos de Arma</button>
+
+        <div class="output-section">
+            <label for="outputCsv" data-key="labelOutputCsv">Línea CSV Generada:</label>
+            <textarea id="outputCsv" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            es: {
+                title: "Generador de Datos de Armas",
+                infoLine1: "Esta herramienta le ayuda a generar datos CSV para nuevas armas basados en la estructura de su juego.",
+                infoLine2: "Introduzca los detalles a continuación y la línea CSV generada aparecerá en el cuadro de salida.",
+                infoLine3: "Para valores no introducidos directamente (como offsets, escalas, etc.), se utilizan valores predeterminados de sus ejemplos. La herramienta se centra en equilibrar la potencia de ataque cuerpo a cuerpo, la potencia de pala, la probabilidad de golpe cuerpo a cuerpo, la potencia de hacha, la potencia de cantera, la durabilidad y la potencia de proyectil.",
+                labelClassName: "Nombre de Clase (ej. NewSwordBlock):",
+                labelDisplayName: "Nombre para Mostrar por Defecto (ej. New Sword):",
+                labelCategory: "Categoría por Defecto (ej. Weapons):",
+                labelCraftingId: "ID de Fabricación (ej. newweapon):",
+                labelMeleePower: "Potencia de Ataque Cuerpo a Cuerpo:",
+                labelShovelPower: "Potencia de Pala:",
+                labelMeleeHitProbability: "Probabilidad de Golpe Cuerpo a Cuerpo:",
+                labelHackPower: "Potencia de Hacha:",
+                labelQuarryPower: "Potencia de Cantera:",
+                labelDurability: "Durabilidad:",
+                labelProjectilePower: "Potencia de Proyectil:",
+                labelIsAimable: "Es Apuntable:",
+                labelIsStickable: "Es Adherible:",
+                labelAlignToVelocity: "Alinear a Velocidad:",
+                labelProjectileSpeed: "Velocidad del Proyectil:",
+                labelProjectileDamping: "Amortiguación:",
+                labelProjectileTipOffset: "Desplazamiento de Punta:",
+                labelProjectileStickProbability: "Probabilidad de Adherencia:",
+                labelDisintegrates: "Se Desintegra al Impacto:",
+                labelToolLevel: "Nivel de Herramienta:",
+                generateButton: "Generar Datos de Arma",
+                labelOutputCsv: "Línea CSV Generada:",
+                sectionCombat: "Propiedades de Combate",
+                sectionTools: "Propiedades de Herramientas",
+                sectionProjectile: "Propiedades de Proyectiles",
+                sectionFlags: "Banderas"
+            },
+            en: {
+                title: "Weapon Data Generator",
+                infoLine1: "This tool helps you generate CSV data for new weapons based on your game's structure.",
+                infoLine2: "Enter the details below, and the generated CSV line will appear in the output box.",
+                infoLine3: "For values not directly input (like offsets, scales, etc.), default values from your examples are used. The tool focuses on balancing melee power, shoveling power, melee hit probability, hacking power, quarrying power, durability, and projectile power.",
+                labelClassName: "Class Name (e.g., NewSwordBlock):",
+                labelDisplayName: "Default Display Name (e.g., New Sword):",
+                labelCategory: "Default Category (e.g., Weapons):",
+                labelCraftingId: "Crafting ID (e.g., newweapon):",
+                labelMeleePower: "Default Melee Power:",
+                labelShovelPower: "Shovel Power:",
+                labelMeleeHitProbability: "Default Melee Hit Probability:",
+                labelHackPower: "Hack Power:",
+                labelQuarryPower: "Quarry Power:",
+                labelDurability: "Durability:",
+                labelProjectilePower: "Default Projectile Power:",
+                labelIsAimable: "Is Aimable:",
+                labelIsStickable: "Is Stickable:",
+                labelAlignToVelocity: "Align To Velocity:",
+                labelProjectileSpeed: "Projectile Speed:",
+                labelProjectileDamping: "Damping:",
+                labelProjectileTipOffset: "Tip Offset:",
+                labelProjectileStickProbability: "Stick Probability:",
+                labelDisintegrates: "Disintegrates On Hit:",
+                labelToolLevel: "Tool Level:",
+                generateButton: "Generate Weapon Data",
+                labelOutputCsv: "Generated CSV Line:",
+                sectionCombat: "Combat Properties",
+                sectionTools: "Tools Properties",
+                sectionProjectile: "Projectile Properties",
+                sectionFlags: "Flags"
+            }
+        };
+
+        let currentLanguage = 'es'; // Default language
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    if (element.tagName === 'INPUT' && element.type === 'text') {
+                        element.placeholder = translations[lang][key];
+                    } else if (element.tagName === 'LABEL') {
+                        element.textContent = translations[lang][key];
+                    } else {
+                        element.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+
+            // Update button active state
+            document.getElementById('langEs').classList.remove('active');
+            document.getElementById('langEn').classList.remove('active');
+            document.getElementById('lang' + lang.charAt(0).toUpperCase() + lang.slice(1)).classList.add('active');
+        }
+
+        function generateWeaponData() {
+            // Get all input values
+            const className = document.getElementById('className').value;
+            const defaultDisplayName = document.getElementById('defaultDisplayName').value;
+            const defaultCategory = document.getElementById('defaultCategory').value;
+            const craftingId = document.getElementById('craftingId').value;
+
+            const defaultMeleePower = document.getElementById('defaultMeleePower').value;
+            const shovelPower = document.getElementById('shovelPower').value;
+            const defaultMeleeHitProbability = document.getElementById('defaultMeleeHitProbability').value;
+            const hackPower = document.getElementById('hackPower').value;
+            const quarryPower = document.getElementById('quarryPower').value;
+            const durability = document.getElementById('durability').value;
+            const defaultProjectilePower = document.getElementById('defaultProjectilePower').value;
+            const toolLevel = document.getElementById('toolLevel').value;
+
+            const isAimable = document.getElementById('isAimable').checked ? "TRUE" : "FALSE";
+            const isStickable = document.getElementById('isStickable').checked ? "TRUE" : "FALSE";
+            const alignToVelocity = document.getElementById('alignToVelocity').checked ? "TRUE" : "FALSE";
+            const disintegratesOnHit = document.getElementById('disintegratesOnHit').checked ? "TRUE" : "FALSE";
+            
+            const projectileSpeed = document.getElementById('projectileSpeed').value;
+            const projectileDamping = document.getElementById('projectileDamping').value;
+            const projectileTipOffset = document.getElementById('projectileTipOffset').value;
+            const projectileStickProbability = document.getElementById('projectileStickProbability').value;
+
+            // Default values based on examples
+            const behaviors = defaultProjectilePower > 0 ? "ThrowableBlockBehavior" : "";
+            const displayOrder = 200;
+            const defaultIconBlockOffset = "0,-1,0";
+            const defaultIconViewOffset = "-1, 0.5, 0";
+            const defaultIconViewScale = "0.75";
+            const firstPersonScale = "0.4";
+            const firstPersonOffset = "0.5, -0.8, -0.6";
+            const firstPersonRotation = "0, 40, 0";
+            const inHandScale = "0.4";
+            const inHandOffset = "0,-0.15,0";
+            const inHandRotation = "0, 0, 0";
+            const defaultCreativeData = "0";
+            const isCollidable = "FALSE";
+            const isPlaceable = "FALSE";
+            const isDiggingTransparent = "FALSE";
+            const isPlacementTransparent = "TRUE";
+            const defaultIsInteractive = "FALSE";
+            const isEditable = "FALSE";
+            const isNonDuplicable = "FALSE";
+            const isGatherable = "FALSE";
+            const hasCollisionBehavior = "FALSE";
+            const killsWhenStuck = "FALSE";
+            const isFluidBlocker = "FALSE";
+            const isTransparent = "FALSE";
+            const generateFacesForSameNeighbors = "FALSE";
+            const defaultShadowStrength = "15";
+            const lightAttenuation = "0";
+            const defaultEmittedLightAmount = "0";
+            const objectShadowStrength = "0";
+            const defaultDropContent = "";
+            const defaultDropCount = "";
+            const defaultExperienceCount = "";
+            const requiredToolLevel = "1";
+            const maxStacking = "1";
+            const sleepSuitability = "0";
+            const frictionFactor = "1";
+            const density = "3";
+            const noAutoJump = "FALSE";
+            const noSmoothRise = "FALSE";
+            const fuelHeatLevel = "0";
+            const fuelFireDuration = "0";
+            const defaultSoundMaterialName = "";
+            const playerLevelRequired = "";
+            const defaultHeat = "0";
+            const fireDuration = "0";
+            const explosionResilience = "";
+            const defaultExplosionPressure = "";
+            const defaultExplosionIncendiary = "";
+            const explosionKeepsPickables = "";
+            const digMethod = "";
+            const digResilience = "";
+            const projectileResilience = "";
+            const defaultNutritionalValue = "";
+            const defaultSicknessProbability = "";
+            const foodType = "";
+            const defaultRotPeriod = "";
+            const defaultTextureSlot = "211";
+            const destructionDebrisScale = "1";
+
+            // Build CSV data array
+            const csvData = [
+                className,
+                defaultDisplayName,
+                defaultCategory,
+                behaviors,
+                displayOrder,
+                defaultIconBlockOffset,
+                defaultIconViewOffset,
+                defaultIconViewScale,
+                firstPersonScale,
+                firstPersonOffset,
+                firstPersonRotation,
+                inHandScale,
+                inHandOffset,
+                inHandRotation,
+                craftingId,
+                defaultCreativeData,
+                isCollidable,
+                isPlaceable,
+                isDiggingTransparent,
+                isPlacementTransparent,
+                defaultIsInteractive,
+                isEditable,
+                isNonDuplicable,
+                isGatherable,
+                hasCollisionBehavior,
+                killsWhenStuck,
+                isFluidBlocker,
+                isTransparent,
+                generateFacesForSameNeighbors,
+                defaultShadowStrength,
+                lightAttenuation,
+                defaultEmittedLightAmount,
+                objectShadowStrength,
+                defaultDropContent,
+                defaultDropCount,
+                defaultExperienceCount,
+                requiredToolLevel,
+                maxStacking,
+                sleepSuitability,
+                frictionFactor,
+                density,
+                noAutoJump,
+                noSmoothRise,
+                fuelHeatLevel,
+                fuelFireDuration,
+                defaultSoundMaterialName,
+                shovelPower,
+                quarryPower,
+                hackPower,
+                defaultMeleePower,
+                defaultMeleeHitProbability,
+                defaultProjectilePower,
+                toolLevel,
+                playerLevelRequired,
+                durability,
+                isAimable,
+                isStickable,
+                alignToVelocity,
+                projectileSpeed,
+                projectileDamping,
+                projectileTipOffset,
+                disintegratesOnHit,
+                projectileStickProbability,
+                defaultHeat,
+                fireDuration,
+                explosionResilience,
+                defaultExplosionPressure,
+                defaultExplosionIncendiary,
+                explosionKeepsPickables,
+                digMethod,
+                digResilience,
+                projectileResilience,
+                defaultNutritionalValue,
+                defaultSicknessProbability,
+                foodType,
+                defaultRotPeriod,
+                defaultTextureSlot,
+                destructionDebrisScale
+            ].join(';') + ';';
+
+            document.getElementById('outputCsv').value = csvData;
+        }
+
+        // Initialize with default values and language on load
+        window.onload = () => {
+            setLanguage('es'); // Set default to Spanish
+            generateWeaponData(); // Generate data with initial values
+        };
+    </script>
+</body>
+</html>
