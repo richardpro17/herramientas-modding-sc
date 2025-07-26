@@ -52,25 +52,72 @@
   grid-column: 1 / -1;
 }
 
-/* Estilos para el selector de idioma */
-.language-switcher {
+/* Estilos para el selector de idioma y el botón de ayuda */
+.top-controls {
   text-align: right;
   margin-bottom: 10px;
 }
-.language-switcher button {
+.top-controls button {
   background-color: #666;
   padding: 5px 10px;
-  margin: 0;
+  margin-left: 5px; /* Espacio entre botones */
   border-radius: 3px;
 }
-.language-switcher button:hover {
+.top-controls button:hover {
   background-color: #444;
+}
+
+/* Estilos para el modal de ayuda */
+.help-modal {
+  display: none; /* Oculto por defecto */
+  position: fixed; /* Posición fija para cubrir toda la pantalla */
+  z-index: 1; /* Estar por encima de otros elementos */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Habilitar scroll si el contenido es muy largo */
+  background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente */
+  padding-top: 60px;
+}
+.help-modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 5% desde arriba y centrado horizontalmente */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Ancho del contenido */
+  max-width: 600px; /* Ancho máximo */
+  border-radius: 8px;
+  position: relative;
+}
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.help-modal-content h3 {
+  color: #005a9e;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+.help-modal-content p {
+  margin-bottom: 10px;
+  line-height: 1.5;
 }
 </style>
 
 <div class="clo-container">
-  <div class="language-switcher">
+  <div class="top-controls">
     <button id="langToggleBtn" onclick="toggleLanguage()"></button>
+    <button id="helpBtn" onclick="openHelpModal()"
+            data-lang-es="Ayuda" data-lang-en="Help">Ayuda</button>
   </div>
 
   <h2 data-lang-es="Generador de Ropa de SC compatible con las ultimas versiones API 1.8.1, solo rellena los campos y baja el archivo o copialo a tu mod."
@@ -149,11 +196,11 @@
 
     <div class="clo-full clo-actions">
       <button onclick="addNewClothing()" type="button"
-              data-lang-es="Agregar nueva prenda" data-lang-en="Add New Clothing Item"></button>
+                    data-lang-es="Agregar nueva prenda" data-lang-en="Add New Clothing Item"></button>
       <button onclick="copyToClipboard()" type="button"
-              data-lang-es="Copiar todo" data-lang-en="Copy All"></button>
+                    data-lang-es="Copiar todo" data-lang-en="Copy All"></button>
       <button onclick="downloadFile()" type="button"
-              data-lang-es="Descargar" data-lang-en="Download"></button>
+                    data-lang-es="Descargar" data-lang-en="Download"></button>
     </div>
   </div>
 
@@ -162,6 +209,64 @@
 
   <h3 data-lang-es="🔵 Estructura completa:" data-lang-en="🔵 Complete Structure:"></h3>
   <textarea id="generatedCode" readonly="" style="height: 180px; width: 100%;"></textarea>
+</div>
+
+<div id="helpModal" class="help-modal">
+  <div class="help-modal-content">
+    <span class="close-button" onclick="closeHelpModal()">&times;</span>
+    <h2 data-lang-es="Ayuda de Parámetros de Ropa" data-lang-en="Clothing Parameters Help"></h2>
+
+    <h3 data-lang-es="Mod Name (opcional)" data-lang-en="Mod Name (optional)"></h3>
+    <p data-lang-es="Nombre opcional para agrupar tu ropa dentro de un mod personalizado. Si se deja vacío, se generará el XML estándar." data-lang-en="Optional name to group your clothing within a custom mod. If left empty, standard XML will be generated."></p>
+
+    <h3 data-lang-es="Index" data-lang-en="Index"></h3>
+    <p data-lang-es="Un número único que identifica esta prenda. Asegúrate de que no se repita con otras prendas en tu mod." data-lang-en="A unique number that identifies this clothing item. Make sure it doesn't repeat with other items in your mod."></p>
+
+    <h3 data-lang-es="Display Name" data-lang-en="Display Name"></h3>
+    <p data-lang-es="El nombre de la prenda que aparecerá en el juego." data-lang-en="The name of the clothing item as it will appear in the game."></p>
+
+    <h3 data-lang-es="Description" data-lang-en="Description"></h3>
+    <p data-lang-es="Una breve descripción de la prenda que se mostrará en el juego." data-lang-en="A brief description of the clothing item that will be displayed in-game."></p>
+
+    <h3 data-lang-es="Slot" data-lang-en="Slot"></h3>
+    <p data-lang-es="La parte del cuerpo donde se usa la prenda (Cabeza, Torso, Piernas, Pies)." data-lang-en="The body part where the clothing is worn (Head, Torso, Legs, Feet)."></p>
+
+    <h3 data-lang-es="Armor Protection" data-lang-en="Armor Protection"></h3>
+    <p data-lang-es="El valor de protección de armadura que proporciona la prenda. Un número decimal, por ejemplo, 0.6." data-lang-en="The armor protection value provided by the clothing item. A decimal number, e.g., 0.6."></p>
+
+    <h3 data-lang-es="Sturdiness" data-lang-en="Sturdiness"></h3>
+    <p data-lang-es="La durabilidad o resistencia de la ropa. Cuanto mayor sea el número, más duradera será." data-lang-en="The durability or toughness of the clothing. The higher the number, the more durable it will be."></p>
+
+    <h3 data-lang-es="Insulation" data-lang-en="Insulation"></h3>
+    <p data-lang-es="El nivel de aislamiento térmico que ofrece la prenda contra el frío o el calor." data-lang-en="The level of thermal insulation the item provides against cold or heat."></p>
+
+    <h3 data-lang-es="Movement Speed Factor" data-lang-en="Movement Speed Factor"></h3>
+    <p data-lang-es="Un multiplicador que afecta la velocidad de movimiento del jugador cuando usa esta prenda. 1 no afecta, valores menores a 1 ralentizan, mayores a 1 aceleran." data-lang-en="A multiplier that affects the player's movement speed when wearing this item. 1 means no effect, values less than 1 slow down, greater than 1 speed up."></p>
+
+    <h3 data-lang-es="Steed Movement Speed Factor" data-lang-en="Steed Movement Speed Factor"></h3>
+    <p data-lang-es="Un multiplicador que afecta la velocidad de la montura del jugador cuando usa esta prenda." data-lang-en="A multiplier that affects the player's steed movement speed when wearing this item."></p>
+
+    <h3 data-lang-es="Density Modifier" data-lang-en="Density Modifier"></h3>
+    <p data-lang-es="Un modificador que puede afectar el comportamiento físico de la prenda (por ejemplo, al flotar en el agua)." data-lang-en="A modifier that can affect the physical behavior of the clothing (e.g., when floating in water)."></p>
+
+    <h3 data-lang-es="Is Outer?" data-lang-en="Is Outer?"></h3>
+    <p data-lang-es="Indica si la prenda es una capa exterior (True) o interior (False). Esto puede afectar cómo se muestra con otras prendas." data-lang-en="Indicates if the clothing is an outer layer (True) or inner layer (False). This can affect how it is displayed with other clothing items."></p>
+
+    <h3 data-lang-es="Can Be Dyed?" data-lang-en="Can Be Dyed?"></h3>
+    <p data-lang-es="Define si la prenda puede ser teñida por el jugador en el juego (True/False)." data-lang-en="Defines whether the clothing can be dyed by the player in-game (True/False)."></p>
+
+    <h3 data-lang-es="Layer" data-lang-en="Layer"></h3>
+    <p data-lang-es="El orden de renderizado de la prenda. Las capas superiores se dibujan sobre las inferiores. Útil para evitar recortes con otras prendas." data-lang-en="The rendering order of the clothing. Higher layers are drawn over lower ones. Useful to prevent clipping with other clothing items."></p>
+
+    <h3 data-lang-es="Player Level Required" data-lang-en="Player Level Required"></h3>
+    <p data-lang-es="El nivel mínimo de jugador requerido para usar esta prenda." data-lang-en="The minimum player level required to wear this clothing item."></p>
+
+    <h3 data-lang-es="Texture Name" data-lang-en="Texture Name"></h3>
+    <p data-lang-es="La ruta de la textura de la prenda dentro de los archivos del juego (ej. Textures/Clothing/MiTextura)." data-lang-en="The texture path of the clothing item within the game files (e.g., Textures/Clothing/MyTexture)."></p>
+
+    <h3 data-lang-es="Impact Sounds Folder" data-lang-en="Impact Sounds Folder"></h3>
+    <p data-lang-es="La carpeta de sonidos de impacto asociados a esta prenda (ej. Audio/Impacts/Soft)." data-lang-en="The folder for impact sounds associated with this clothing item (e.g., Audio/Impacts/Soft)."></p>
+  </div>
 </div>
 
 <script>
@@ -174,14 +279,52 @@ const translations = {
     noCodeAlert: "No hay código generado.",
     downloadFileName: "ropa_generada.clo",
     toggleBtnText: "English",
-    modNamePlaceholder: "Ejemplo: MiModDeRopa"
+    modNamePlaceholder: "Ejemplo: MiModDeRopa",
+    helpBtnText: "Ayuda",
+    helpModalTitle: "Ayuda de Parámetros de Ropa",
+    modNameHelp: "Nombre opcional para agrupar tu ropa dentro de un mod personalizado. Si se deja vacío, se generará el XML estándar.",
+    indexHelp: "Un número único que identifica esta prenda. Asegúrate de que no se repita con otras prendas en tu mod.",
+    displayNameHelp: "El nombre de la prenda que aparecerá en el juego.",
+    descriptionHelp: "Una breve descripción de la prenda que se mostrará en el juego.",
+    slotHelp: "La parte del cuerpo donde se usa la prenda (Cabeza, Torso, Piernas, Pies).",
+    armorProtectionHelp: "El valor de protección de armadura que proporciona la prenda. Un número decimal, por ejemplo, 0.6.",
+    sturdinessHelp: "La **durabilidad o resistencia de la ropa**. Cuanto mayor sea el número, más duradera será.",
+    insulationHelp: "El nivel de aislamiento térmico que ofrece la prenda contra el frío o el calor.",
+    movementSpeedFactorHelp: "Un multiplicador que afecta la velocidad de movimiento del jugador cuando usa esta prenda. 1 no afecta, valores menores a 1 ralentizan, mayores a 1 aceleran.",
+    steedMovementSpeedFactorHelp: "Un multiplicador que afecta la velocidad de la montura del jugador cuando usa esta prenda.",
+    densityModifierHelp: "Un modificador que puede afectar el comportamiento físico de la prenda (por ejemplo, al flotar en el agua).",
+    isOuterHelp: "Indica si la prenda es una capa exterior (True) o interior (False). Esto puede afectar cómo se muestra con otras prendas.",
+    canBeDyedHelp: "Define si la prenda puede ser teñida por el jugador en el juego (True/False).",
+    layerHelp: "El orden de renderizado de la prenda. Las capas superiores se dibujan sobre las inferiores. Útil para evitar recortes con otras prendas.",
+    playerLevelRequiredHelp: "El nivel mínimo de jugador requerido para usar esta prenda.",
+    textureNameHelp: "La ruta de la textura de la prenda dentro de los archivos del juego (ej. Textures/Clothing/MiTextura).",
+    impactSoundsFolderHelp: "La carpeta de sonidos de impacto asociados a esta prenda (ej. Audio/Impacts/Soft)."
   },
   'en': {
     copyAlert: "Code copied to clipboard",
     noCodeAlert: "No code generated.",
     downloadFileName: "generated_clothing.clo",
     toggleBtnText: "Español",
-    modNamePlaceholder: "Example: MyClothingMod"
+    modNamePlaceholder: "Example: MyClothingMod",
+    helpBtnText: "Help",
+    helpModalTitle: "Clothing Parameters Help",
+    modNameHelp: "Optional name to group your clothing within a custom mod. If left empty, standard XML will be generated.",
+    indexHelp: "A unique number that identifies this clothing item. Make sure it doesn't repeat with other items in your mod.",
+    displayNameHelp: "The name of the clothing item as it will appear in the game.",
+    descriptionHelp: "A brief description of the clothing item that will be displayed in-game.",
+    slotHelp: "The body part where the clothing is worn (Head, Torso, Legs, Feet).",
+    armorProtectionHelp: "The armor protection value provided by the clothing item. A decimal number, e.g., 0.6.",
+    sturdinessHelp: "The **durability or toughness of the clothing**. The higher the number, the more durable it will be.",
+    insulationHelp: "The level of thermal insulation the item provides against cold or heat.",
+    movementSpeedFactorHelp: "A multiplier that affects the player's movement speed when wearing this item. 1 means no effect, values less than 1 slow down, greater than 1 speed up.",
+    steedMovementSpeedFactorHelp: "A multiplier that affects the player's steed movement speed when wearing this item.",
+    densityModifierHelp: "A modifier that can affect the physical behavior of the clothing (e.g., when floating in water).",
+    isOuterHelp: "Indicates if the clothing is an outer layer (True) or inner layer (False). This can affect how it is displayed with other clothing items.",
+    canBeDyedHelp: "Defines whether the clothing can be dyed by the player in-game (True/False).",
+    layerHelp: "The rendering order of the clothing. Higher layers are drawn over lower ones. Useful to prevent clipping with other clothing items.",
+    playerLevelRequiredHelp: "The minimum player level required to wear this clothing item.",
+    textureNameHelp: "The texture path of the clothing item within the game files (e.g., Textures/Clothing/MyTexture).",
+    impactSoundsFolderHelp: "The folder for impact sounds associated with this clothing item (e.g., Audio/Impacts/Soft)."
   }
 };
 
@@ -208,11 +351,96 @@ function setLanguage(lang) {
 
   // Actualizar texto del botón de cambio de idioma
   document.getElementById('langToggleBtn').textContent = translations[currentLang].toggleBtnText;
+  // Actualizar texto del botón de ayuda
+  document.getElementById('helpBtn').textContent = translations[currentLang].helpBtnText;
+
+  // Actualizar contenido del modal de ayuda
+  updateHelpModalContent();
 }
 
 function toggleLanguage() {
   setLanguage(currentLang === 'es' ? 'en' : 'es');
 }
+
+function openHelpModal() {
+  document.getElementById('helpModal').style.display = 'block';
+  updateHelpModalContent(); // Asegurarse de que el contenido del modal esté en el idioma correcto
+}
+
+function closeHelpModal() {
+  document.getElementById('helpModal').style.display = 'none';
+}
+
+function updateHelpModalContent() {
+  const lang = currentLang;
+  const modalContent = document.querySelector('.help-modal-content');
+
+  modalContent.querySelector('h2').textContent = translations[lang].helpModalTitle;
+
+  // Actualizar cada sección de ayuda
+  modalContent.querySelector('h3[data-lang-es="Mod Name (opcional)"]').textContent = translations[lang].ModName;
+  modalContent.querySelector('p[data-lang-es="Nombre opcional para agrupar tu ropa dentro de un mod personalizado. Si se deja vacío, se generará el XML estándar."]').innerHTML = translations[lang].modNameHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Index"]').textContent = translations[lang].Index;
+  modalContent.querySelector('p[data-lang-es="Un número único que identifica esta prenda. Asegúrate de que no se repita con otras prendas en tu mod."]').innerHTML = translations[lang].indexHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Display Name"]').textContent = translations[lang].DisplayName;
+  modalContent.querySelector('p[data-lang-es="El nombre de la prenda que aparecerá en el juego."]').innerHTML = translations[lang].displayNameHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Description"]').textContent = translations[lang].Description;
+  modalContent.querySelector('p[data-lang-es="Una breve descripción de la prenda que se mostrará en el juego."]').innerHTML = translations[lang].descriptionHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Slot"]').textContent = translations[lang].Slot;
+  modalContent.querySelector('p[data-lang-es="La parte del cuerpo donde se usa la prenda (Cabeza, Torso, Piernas, Pies)."]').innerHTML = translations[lang].slotHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Armor Protection"]').textContent = translations[lang].ArmorProtection;
+  modalContent.querySelector('p[data-lang-es="El valor de protección de armadura que proporciona la prenda. Un número decimal, por ejemplo, 0.6."]').innerHTML = translations[lang].armorProtectionHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Sturdiness"]').textContent = translations[lang].Sturdiness;
+  modalContent.querySelector('p[data-lang-es="La durabilidad o resistencia de la ropa. Cuanto mayor sea el número, más duradera será."]').innerHTML = translations[lang].sturdinessHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Insulation"]').textContent = translations[lang].Insulation;
+  modalContent.querySelector('p[data-lang-es="El nivel de aislamiento térmico que ofrece la prenda contra el frío o el calor."]').innerHTML = translations[lang].insulationHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Movement Speed Factor"]').textContent = translations[lang].MovementSpeedFactor;
+  modalContent.querySelector('p[data-lang-es="Un multiplicador que afecta la velocidad de movimiento del jugador cuando usa esta prenda. 1 no afecta, valores menores a 1 ralentizan, mayores a 1 aceleran."]').innerHTML = translations[lang].movementSpeedFactorHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Steed Movement Speed Factor"]').textContent = translations[lang].SteedMovementSpeedFactor;
+  modalContent.querySelector('p[data-lang-es="Un multiplicador que afecta la velocidad de la montura del jugador cuando usa esta prenda."]').innerHTML = translations[lang].steedMovementSpeedFactorHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Density Modifier"]').textContent = translations[lang].DensityModifier;
+  modalContent.querySelector('p[data-lang-es="Un modificador que puede afectar el comportamiento físico de la prenda (por ejemplo, al flotar en el agua)."]').innerHTML = translations[lang].densityModifierHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Is Outer?"]').textContent = translations[lang].IsOuter;
+  modalContent.querySelector('p[data-lang-es="Indica si la prenda es una capa exterior (True) o interior (False). Esto puede afectar cómo se muestra con otras prendas."]').innerHTML = translations[lang].isOuterHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Can Be Dyed?"]').textContent = translations[lang].CanBeDyed;
+  modalContent.querySelector('p[data-lang-es="Define si la prenda puede ser teñida por el jugador en el juego (True/False)."]').innerHTML = translations[lang].canBeDyedHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Layer"]').textContent = translations[lang].Layer;
+  modalContent.querySelector('p[data-lang-es="El orden de renderizado de la prenda. Las capas superiores se dibujan sobre las inferiores. Útil para evitar recortes con otras prendas."]').innerHTML = translations[lang].layerHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Player Level Required"]').textContent = translations[lang].PlayerLevelRequired;
+  modalContent.querySelector('p[data-lang-es="El nivel mínimo de jugador requerido para usar esta prenda."]').innerHTML = translations[lang].playerLevelRequiredHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Texture Name"]').textContent = translations[lang].TextureName;
+  modalContent.querySelector('p[data-lang-es="La ruta de la textura de la prenda dentro de los archivos del juego (ej. Textures/Clothing/MiTextura)."]').innerHTML = translations[lang].textureNameHelp;
+
+  modalContent.querySelector('h3[data-lang-es="Impact Sounds Folder"]').textContent = translations[lang].ImpactSoundsFolder;
+  modalContent.querySelector('p[data-lang-es="La carpeta de sonidos de impacto asociados a esta prenda (ej. Audio/Impacts/Soft)."]').innerHTML = translations[lang].impactSoundsFolderHelp;
+
+
+  // Asegurarse de que todos los h3 y p dentro del modal se actualicen según el idioma
+  modalContent.querySelectorAll('[data-lang-es], [data-lang-en]').forEach(element => {
+    if (lang === 'es' && element.dataset.langEs) {
+      element.innerHTML = element.dataset.langEs;
+    } else if (lang === 'en' && element.dataset.langEn) {
+      element.innerHTML = element.dataset.langEn;
+    }
+  });
+
+}
+
 
 function addNewClothing() {
   const data = {
@@ -288,4 +516,12 @@ function downloadFile() {
 document.addEventListener('DOMContentLoaded', () => {
   setLanguage('es'); // Establecer español como idioma predeterminado al cargar
 });
+
+// Cerrar el modal al hacer clic fuera del contenido
+window.onclick = function(event) {
+  const modal = document.getElementById('helpModal');
+  if (event.target == modal) {
+    closeHelpModal();
+  }
+}
 </script>
