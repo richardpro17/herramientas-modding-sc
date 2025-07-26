@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-en="C# Block Code Generator" data-es="Generador de Código C# para Bloques">Generador de Código C# para Bloques</title>
+    <style>
+        /* Estilos precargados */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            background-color: #f4f4f4;
+            color: #333;
+            resize: vertical;
+            margin-top: 20px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .action-buttons button {
+            width: auto;
+            flex-grow: 1;
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+        .action-buttons button.copy {
+            background-color: #28a745;
+        }
+        .action-buttons button.copy:hover {
+            background-color: #218838;
+        }
+        .action-buttons button.download {
+            background-color: #ffc107;
+            color: var(--dark-color);
+        }
+        .action-buttons button.download:hover {
+            background-color: #e0a800;
+        }
+        .description {
+            font-size: 16px;
+            text-align: center;
+            background-color: #e0f7fa;
+            border-left: 5px solid #00bcd4;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        .language-switcher {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+        .language-switcher button {
+            display: inline-block;
+            width: auto;
+            padding: 8px 15px;
+            font-size: 14px;
+            margin-left: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .language-switcher button:hover {
+            background-color: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-switcher">
+            <button onclick="setLanguage('es')">Español</button>
+            <button onclick="setLanguage('en')">English</button>
+        </div>
+
+        <h1 data-en="C# Block Code Generator(Weapons & Items)" data-es="Generador de Código C# para Bloques(Armas o Items)">Generador de Código C# para Bloques</h1>
+        <p class="description" data-en="Enter the data to generate the C# code for your custom block." data-es="Introduce los datos para generar el código C# de tu bloque personalizado.">
+            Introduce los datos para generar el código C# de tu bloque personalizado.
+        </p>
+
+        <div class="form-group">
+            <label for="className" data-en="Class Name (e.g. MyCustomBlock):" data-es="Class Name (ej. MyCustomBlock):">Class Name (ej. MyCustomBlock):</label>
+            <input type="text" id="className" value="MyCustomBlock">
+        </div>
+
+        <div class="form-group">
+            <label for="modelName" data-en="Model Name (e.g. MyModel):" data-es="Model Name (ej. MyModel):">Model Name (ej. MyModel):</label>
+            <input type="text" id="modelName" value="MyModel">
+        </div>
+
+        <div class="form-group">
+            <label for="textureName" data-en="Texture Name (e.g. MyTexture):" data-es="Texture Name (ej. MyTexture):">Texture Name (ej. MyTexture):</label>
+            <input type="text" id="textureName" value="MyTexture">
+        </div>
+
+        <div class="form-group">
+            <label for="meshName" data-en="Mesh Name (e.g. MyMesh):" data-es="Mesh Name (ej. MyMesh):">Mesh Name (ej. MyMesh):</label>
+            <input type="text" id="meshName" value="MyMesh">
+        </div>
+
+        <div class="form-group">
+            <label for="blockIndex" data-en="Block Index (number):" data-es="Block Index (número):">Block Index (número):</label>
+            <input type="number" id="blockIndex" value="1000">
+        </div>
+
+        <button onclick="generateCode()" data-en="Generate C# Code" data-es="Generar Código C#">Generar Código C#</button>
+
+        <textarea id="outputCode" readonly></textarea>
+
+        <div class="action-buttons">
+            <button class="copy" onclick="copyCode()" data-en="Copy Code" data-es="Copiar Código">Copiar Código</button>
+            <button class="download" onclick="downloadCode()" data-en="Download .cs" data-es="Descargar .cs">Descargar .cs</button>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            es: {
+                "documentTitle": "Generador de Código C# para Bloques",
+                "h1": "Generador de Código C# para Bloques",
+                "description": "Introduce los datos para generar el código C# de tu bloque personalizado.",
+                "classNameLabel": "Class Name (ej. MyCustomBlock):",
+                "modelNameLabel": "Model Name (ej. MyModel):",
+                "textureNameLabel": "Texture Name (ej. MyTexture):",
+                "meshNameLabel": "Mesh Name (ej. MyMesh):",
+                "blockIndexLabel": "Block Index (número):",
+                "generateButton": "Generar Código C#",
+                "copyButton": "Copiar Código",
+                "downloadButton": "Descargar .cs",
+                "copySuccess": "¡Código copiado al portapapeles!",
+                "copyError": "Error al copiar el código: "
+            },
+            en: {
+                "documentTitle": "C# Block Code Generator",
+                "h1": "C# Block Code Generator",
+                "description": "Enter the data to generate the C# code for your custom block.",
+                "classNameLabel": "Class Name (e.g. MyCustomBlock):",
+                "modelNameLabel": "Model Name (e.g. MyModel):",
+                "textureNameLabel": "Texture Name (e.g. MyTexture):",
+                "meshNameLabel": "Mesh Name (e.g. MyMesh):",
+                "blockIndexLabel": "Block Index (number):",
+                "generateButton": "Generate C# Code",
+                "copyButton": "Copy Code",
+                "downloadButton": "Download .cs",
+                "copySuccess": "Code copied to clipboard!",
+                "copyError": "Error copying code: "
+            }
+        };
+
+        function setLanguage(lang) {
+            document.documentElement.lang = lang; // Set HTML lang attribute
+            const elements = document.querySelectorAll('[data-es], [data-en]');
+            elements.forEach(element => {
+                if (element.dataset[lang]) {
+                    element.textContent = element.dataset[lang];
+                }
+            });
+
+            // Update specific elements not covered by data attributes or requiring special handling
+            document.title = translations[lang].documentTitle;
+            document.querySelector('label[for="className"]').textContent = translations[lang].classNameLabel;
+            document.querySelector('label[for="modelName"]').textContent = translations[lang].modelNameLabel;
+            document.querySelector('label[for="textureName"]').textContent = translations[lang].textureNameLabel;
+            document.querySelector('label[for="meshName"]').textContent = translations[lang].meshNameLabel;
+            document.querySelector('label[for="blockIndex"]').textContent = translations[lang].blockIndexLabel;
+            document.querySelector('button[onclick="generateCode()"]').textContent = translations[lang].generateButton;
+            document.querySelector('button.copy').textContent = translations[lang].copyButton;
+            document.querySelector('button.download').textContent = translations[lang].downloadButton;
+        }
+
+        function generateCode() {
+            const className = document.getElementById('className').value;
+            const modelName = document.getElementById('modelName').value;
+            const textureName = document.getElementById('textureName').value;
+            const meshName = document.getElementById('meshName').value;
+            const blockIndex = document.getElementById('blockIndex').value;
+
+            const template = `using System;
+using Engine;
+using Engine.Graphics;
+
+namespace Game
+{
+    public class ${className}: Block
+    {
+        public override void Initialize()
+        {
+            Model model = ContentManager.Get<Model>("Models/${modelName}");
+            this.m_texture = ContentManager.Get<Texture2D>("Textures/${textureName}");
+            Matrix boneAbsoluteTransform = BlockMesh.GetBoneAbsoluteTransform(model.FindMesh("${meshName}", true).ParentBone);
+            this.m_standaloneBlockMesh.AppendModelMeshPart(model.FindMesh("${meshName}", true).MeshParts[0], boneAbsoluteTransform * Matrix.CreateTranslation(0f, 0f, 0f), false, false, false, false, Color.White);
+            base.Initialize();
+        }
+
+        public override void GenerateTerrainVertices(BlockGeometryGenerator generator, TerrainGeometry geometry, int value, int x, int y, int z)
+        {
+        }
+
+        public override void DrawBlock(PrimitivesRenderer3D primitivesRenderer, int value, Color color, float size, ref Matrix matrix, DrawBlockEnvironmentData environmentData)
+        {
+            BlocksManager.DrawMeshBlock(primitivesRenderer, this.m_standaloneBlockMesh, this.m_texture, color, 2.5f * size, ref matrix, environmentData);
+        }
+
+        public static int Index = ${blockIndex};
+        public Texture2D m_texture;
+
+        public BlockMesh m_standaloneBlockMesh = new BlockMesh();
+    }
+}`;
+            document.getElementById('outputCode').value = template;
+        }
+
+        function copyCode() {
+            const outputCode = document.getElementById('outputCode');
+            outputCode.select();
+            outputCode.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                document.execCommand('copy');
+                const currentLang = document.documentElement.lang || 'es';
+                alert(translations[currentLang].copySuccess);
+            } catch (err) {
+                const currentLang = document.documentElement.lang || 'es';
+                alert(translations[currentLang].copyError + err);
+            }
+        }
+
+        function downloadCode() {
+            const className = document.getElementById('className').value;
+            const outputCode = document.getElementById('outputCode').value;
+            const filename = `${className}.cs`;
+            const blob = new Blob([outputCode], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize with default language (Spanish)
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage('es');
+            generateCode(); // Generate code with default values on load
+        });
+    </script>
+</body>
+</html>
